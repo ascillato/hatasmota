@@ -25,6 +25,16 @@ from .const import (
     LST_RGBCW,
     LST_RGBW,
     LST_SINGLE,
+    LT_PWM6,
+    LT_PWM7,
+    LT_NU8,
+    LT_SERIAL1,
+    LT_SERIAL2,
+    LT_RGB,
+    LT_RGBW,
+    LT_RGBWC,
+    LT_NU14,
+    LT_NU15,
     OPTION_FADE_FIXED_DURATION,
     OPTION_NOT_POWER_LINKED,
     OPTION_PWM_MULTI_CHANNELS,
@@ -59,6 +69,16 @@ LIGHT_TYPE_COLDWARM = 2
 LIGHT_TYPE_RGB = 3
 LIGHT_TYPE_RGBW = 4
 LIGHT_TYPE_RGBCW = 5
+LIGHT_TYPE_PWM6 = 6
+LIGHT_TYPE_PWM7 = 7
+LIGHT_TYPE_NU8 = 8
+LIGHT_TYPE_SERIAL1 = 9
+LIGHT_TYPE_SERIAL2 = 10
+LIGHT_TYPE_WS2812 = 11
+LIGHT_TYPE_AILIGHT = 12
+LIGHT_TYPE_SONOFFB1 = 13
+LIGHT_TYPE_NU14 = 14
+LIGHT_TYPE_NU15 = 15
 
 LIGHT_TYPE_MAP = {
     LIGHT_TYPE_NONE: LST_NONE,
@@ -67,6 +87,16 @@ LIGHT_TYPE_MAP = {
     LIGHT_TYPE_RGB: LST_RGB,
     LIGHT_TYPE_RGBW: LST_RGBW,
     LIGHT_TYPE_RGBCW: LST_RGBCW,
+    LIGHT_TYPE_PWM6: LT_PWM6,
+    LIGHT_TYPE_PWM7: LT_PWM7,
+    LIGHT_TYPE_NU8: LT_NU8,
+    LIGHT_TYPE_SERIAL1: LT_SERIAL1,
+    LIGHT_TYPE_SERIAL2: LT_SERIAL2,
+    LIGHT_TYPE_WS2812: LT_RGB,
+    LIGHT_TYPE_AILIGHT: LT_RGBW,
+    LIGHT_TYPE_SONOFFB1: LT_RGBWC,
+    LIGHT_TYPE_NU14: LT_NU14,
+    LIGHT_TYPE_NU15: LT_NU15,
 }
 
 DEFAULT_MIN_MIREDS = 153
@@ -124,8 +154,10 @@ class TasmotaLightConfig(TasmotaAvailabilityConfig, TasmotaEntityConfig):
                 dimmer_idx = 2  # Brightness controlled by DIMMER2
                 if tasmota_light_sub_type == LST_RGBW:
                     light_type = LIGHT_TYPE_DIMMER
-                else:
+                elif tasmota_light_sub_type == LST_RGBCW:
                     light_type = LIGHT_TYPE_COLDWARM
+                else:
+                    light_type = LIGHT_TYPE_RGB # WS2812
             dimmer_cmd = f"{COMMAND_DIMMER}{dimmer_idx}"
             dimmer_state = f"{COMMAND_DIMMER}{dimmer_idx}"
 
@@ -261,7 +293,7 @@ class TasmotaLight(TasmotaAvailability, TasmotaEntity):
     def effect_list(self):
         """Return effect list."""
         if self._cfg.endpoint == "light":
-            return ["None", "Wake up", "Cycle up", "Cycle down", "Random"]
+            return ["None", "Wake up", "Cycle up", "Cycle down", "Random", "Clock mode", "Candlelight", "RGB", "Christmas", "Hanukkah", "Kwanzaa", "Rainbow", "Fire"]
         return None
 
     @property
